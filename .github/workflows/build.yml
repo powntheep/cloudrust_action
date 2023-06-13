@@ -29,5 +29,5 @@ jobs:
       - id: "deploy"
         uses: "google-github-actions/deploy-cloudrun@v1"
         with:
-          service: "cloudrust_action"
+          service: "cloudrust-action"
           image: "gcr.io/milk-platform-service/cloudrust_action:$GITHUB_REF_NAME"
