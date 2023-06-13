@@ -2,31 +2,32 @@ name: ci
 
 on:
   push:
-    branches:
-      - master
-
+    tags:
+      - "milk_platform_service-v[0-9]+.[0-9]+.[0-9]+"
+      - "milk_platform_service-v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
 jobs:
   docker:
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v1'
+      - id: "auth"
+        uses: "google-github-actions/auth@v1"
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
       - name: Build
         run: docker build --tag=gcr.io/milk-platform-service/cloudrust_action:latest --file=./Dockerfile .
+      - name: Configure Docker auth
+        run: gcloud auth configure-docker
       - name: Push to GCR
         run: docker push gcr.io/milk-platform-service/cloudrust_action:latest
-      - id: 'deploy'
-        uses: 'google-github-actions/deploy-cloudrun@v1'
+      - id: "deploy"
+        uses: "google-github-actions/deploy-cloudrun@v1"
         with:
-          service: 'cloudrust_action'
-          image: 'gcr.io/milk-platform-service/cloudrust_action:latest'
-
+          service: "cloudrust_action"
+          image: "gcr.io/milk-platform-service/cloudrust_action:latest"
