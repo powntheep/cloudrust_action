@@ -154,7 +154,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // `PORT` environment variable unset; defaulting to...
         None => 50051,
     };
-    let addr  = format!("[::1]:{}", port).parse().unwrap();
+    let addr  = format!("0.0.0.0:{}", port).parse().unwrap();
 
     println!("RouteGuideServer listening on: {}", addr);
 
