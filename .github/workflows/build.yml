@@ -8,6 +8,9 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -18,7 +21,20 @@ jobs:
         with:
           context: .
           load: true
-          tags: myimage:latest
-      - name: Inspect
-        run: |
-          docker image inspect myimage:latest
+          tags: cloudrust_action:latest
+      - name: Push to GCR
+        uses: google-github-actions/docker@v1
+        with:
+          gcr_host: gcr.io
+          image: cloudrust_action:latest
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-cloudrun@v1'
+        with:
+          service: 'cloudrust_action'
+          image: 'gcr.io/milk-platform-service/cloudrust_action:latest'
+
