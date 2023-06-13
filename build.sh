@@ -1,4 +1,4 @@
-docker buildx build --platform="linux/amd64" \
+docker build \
   --tag=gcr.io/milk-platform-service/cloudrust:latest \
-  --file=./Dockerfile \
+  --file=./Dockerfile.chef \
   .

@@ -36,7 +36,7 @@ WORKDIR /cloudrust_run
 COPY ./ .
 
 # We no longer need to use the x86_64-unknown-linux-musl target
-RUN cargo build --release
+RUN cargo install --path . 
 
 ####################################################################################################
 ## Final image
@@ -50,9 +50,9 @@ COPY --from=builder /etc/group /etc/group
 WORKDIR /cloudrust_run
 
 # Copy our build
-COPY --from=builder /cloudrust_run/target/release/cloudrust_run ./
+COPY --from=builder /usr/local/cargo/bin/cloudrust_run .
 
 # Use an unprivileged user.
 USER cloudrust_run:cloudrust_run
 
-CMD ["/cloudrust_run/cloudrust_run"]
+ENTRYPOINT ["./cloudrust_run"]
