@@ -18,7 +18,7 @@ ENV PATH="${PATH}:/protoc-${VERS}-${ARCH}/bin"
 RUN which protoc
 
 # Create appuser
-ENV USER=rusted
+ENV USER=cloudrust_run
 ENV UID=10001
 
 RUN adduser \
@@ -31,7 +31,7 @@ RUN adduser \
     "${USER}"
 
 
-WORKDIR /rusted
+WORKDIR /cloudrust_run
 
 COPY ./ .
 
@@ -47,12 +47,12 @@ FROM gcr.io/distroless/cc
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
-WORKDIR /rusted
+WORKDIR /cloudrust_run
 
 # Copy our build
-COPY --from=builder /rusted/target/release/rusted ./
+COPY --from=builder /cloudrust_run/target/release/cloudrust_run ./
 
 # Use an unprivileged user.
-USER rusted:rusted
+USER cloudrust_run:cloudrust_run
 
-CMD ["/rusted/rusted"]
+CMD ["/cloudrust_run/cloudrust_run"]
